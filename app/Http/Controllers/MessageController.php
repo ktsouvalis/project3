@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -18,5 +19,9 @@ class MessageController extends Controller
             'content' => request('content'),
             'user_id' => auth()->id()
         ]);
+
+        MessageSent::dispatch($message);
+
+        return response()->json(['status' => 'Message Sent!', 'message' => $message->content, 'user' => auth()->user()->name]);
     }
 }

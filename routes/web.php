@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('messages', MessageController::class);
+Route::resource('messages', MessageController::class)->middleware('auth');
 
 Route::get('/login', function () {
     return view('login');
@@ -16,9 +16,14 @@ Route::get('/login', function () {
 Route::post('/login', function () {
     $credentials = request()->only('email', 'password');
     if (auth()->attempt($credentials)) {
-        return redirect('/messages');
+        return redirect('/');
     }
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.',
     ]);
 });
+
+Route::get('/logout', function () {
+    auth()->logout();
+    return redirect('/');
+})->name('logout');
