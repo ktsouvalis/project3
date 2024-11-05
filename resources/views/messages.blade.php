@@ -29,43 +29,54 @@
     </div>
     <script>
         window.onload = function() {
-            let messages = document.querySelector('.messages');
-            let newMessage = document.querySelector('.new-message');
-            let form = newMessage.querySelector('form');
-            let textarea = form.querySelector('textarea');
-            let button = form.querySelector('button');
-
-            form.onsubmit = function(event) {
-                event.preventDefault();
-
-                let content = textarea.value;
-
-                if (content.trim() === '') {
-                    return;
-                }
-
-                fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ content })
-                })
-                .then(response => response.json())
-                .then(data => {
+            // Initialize Echo listener for incoming messages
+            // console.log(window.Echo.channel('chatroom'));
+            window.Echo.private('chatroom')
+                .listen('MessageSent', (e) => {
+                    alert('New message received!'); // Optional: Display an alert when a new message is received
+                    console.log(e); // Log the entire event data for verification
+    
+                    // Access message and user details directly
                     let message = document.createElement('div');
                     message.classList.add('message');
-                    message.innerHTML = `<strong>${data.user.name}:</strong> ${data.content}`;
-                    messages.appendChild(message);
-                    textarea.value = '';
+                    message.innerHTML = `<strong>${e.user.name}:</strong> ${e.message}`;
+                    document.querySelector('.messages').appendChild(message);
                 });
-                window.Echo.private(`chatroom`)
-                .listen('MessageSent', (e) => {
-                    console.log(e);
-                });
-            };
+    
+            // let messages = document.querySelector('.messages');
+            // let newMessage = document.querySelector('.new-message');
+            // let form = newMessage.querySelector('form');
+            // let textarea = form.querySelector('textarea');
+    
+            // form.onsubmit = function(event) {
+            //     event.preventDefault();
+    
+            //     let content = textarea.value;
+    
+            //     if (content.trim() === '') {
+            //         return;
+            //     }
+    
+            //     fetch(form.action, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            //         },
+            //         body: JSON.stringify({ content })
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         let message = document.createElement('div');
+            //         message.classList.add('message');
+            //         message.innerHTML = `<strong>${data.user}:</strong> ${data.message}`;
+            //         messages.appendChild(message);
+            //         textarea.value = '';
+            //     });
+            // };
         };
     </script>
+    
+    
 </body>
 </html>

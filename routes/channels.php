@@ -6,6 +6,6 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
-Broadcast::channel('chatroom', function () {
+Broadcast::channel('chatroom', function ($user) {
     return auth()->check();
 });
