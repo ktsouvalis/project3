@@ -21,7 +21,6 @@ class MessageController extends Controller
         ]);
 
         MessageSent::dispatch($message);
-        // broadcast(new MessageSent($message))->toOthers();
 
         return response()->json(['status' => 'Message Sent!', 'message' => $message->content, 'user' => auth()->user()->name]);
     }
