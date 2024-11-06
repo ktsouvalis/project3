@@ -19,7 +19,7 @@ class MessageFactory extends Factory
     {
         return [
             'content' => $this->faker->sentence,
-            'user_id' => User::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }
